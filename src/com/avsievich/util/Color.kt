@@ -3,6 +3,19 @@ package com.avsievich.util
 import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Float4
 
+const val BLACK = -0x1000000
+const val DKGRAY = -0xbbbbbc
+const val GRAY = -0x777778
+const val LTGRAY = -0x333334
+const val WHITE = -0x1
+const val RED = -0x10000
+const val GREEN = -0xff0100
+const val BLUE = -0xffff01
+const val YELLOW = -0x100
+const val CYAN = -0xff0001
+const val MAGENTA = -0xff01
+const val TRANSPARENT = 0
+
 fun argb(alpha: Int, red: Int, green: Int, blue: Int) =
         alpha shl 24 or (red shl 16) or (green shl 8) or blue
 
