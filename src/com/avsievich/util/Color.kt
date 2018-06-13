@@ -2,6 +2,7 @@ package com.avsievich.util
 
 import com.curiouscreature.kotlin.math.Float3
 import com.curiouscreature.kotlin.math.Float4
+import java.util.*
 
 const val BLACK = -0x1000000
 const val DKGRAY = -0xbbbbbc
@@ -15,6 +16,10 @@ const val YELLOW = -0x100
 const val CYAN = -0xff0001
 const val MAGENTA = -0xff01
 const val TRANSPARENT = 0
+val ALL_COLORS = intArrayOf(BLACK, DKGRAY, GRAY, LTGRAY, WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA)
+private val COLOR_RANDOM = Random()
+
+fun randomColor() = ALL_COLORS[COLOR_RANDOM.nextInt(ALL_COLORS.size)]
 
 fun argb(alpha: Int, red: Int, green: Int, blue: Int) =
         alpha shl 24 or (red shl 16) or (green shl 8) or blue

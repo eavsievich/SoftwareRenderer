@@ -3,6 +3,7 @@ package com.avsievich.render
 import com.avsievich.image.Image
 import com.avsievich.util.CYAN
 import com.avsievich.util.FastReader
+import com.avsievich.util.randomColor
 import com.curiouscreature.kotlin.math.Float2
 import com.curiouscreature.kotlin.math.Float3
 import java.io.FileInputStream
@@ -60,6 +61,18 @@ class Model(private val filename: String) {
                 val y1 = ((v1.y + 1.0) * image.height / 2.0).toInt()
                 image.line(x0, y0, x1, y1, CYAN)
             }
+        }
+    }
+
+    fun renderFilled(image: Image) {
+        facesVert.forEach { face ->
+            val x0 = ((verts[face[0]].x + 1.0) * image.width / 2.0).toInt()
+            val y0 = ((verts[face[0]].y + 1.0) * image.height / 2.0).toInt()
+            val x1 = ((verts[face[1]].x + 1.0) * image.width / 2.0).toInt()
+            val y1 = ((verts[face[1]].y + 1.0) * image.height / 2.0).toInt()
+            val x2 = ((verts[face[2]].x + 1.0) * image.width / 2.0).toInt()
+            val y2 = ((verts[face[2]].y + 1.0) * image.height / 2.0).toInt()
+            image.triangle(x0, y0, x1, y1, x2, y2, randomColor())
         }
     }
 }
