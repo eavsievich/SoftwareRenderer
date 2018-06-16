@@ -15,10 +15,10 @@ class Model(private val filename: String) {
     private val modelNorms = ArrayList<Float3>()
     private val modelUv = ArrayList<Float2>()
 
-    val verts = Collections.unmodifiableList(modelVerts)
+    val vertices = Collections.unmodifiableList(modelVerts)
     val faces = Collections.unmodifiableList(modelFaces)
-    val facesVert = Collections.unmodifiableList(modelFacesVert)
-    val norms = Collections.unmodifiableList(modelNorms)
+    val polygons = Collections.unmodifiableList(modelFacesVert)
+    val normals = Collections.unmodifiableList(modelNorms)
     val uv = Collections.unmodifiableList(modelUv)
 
     init {
