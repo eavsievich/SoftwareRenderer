@@ -1,13 +1,19 @@
 package com.avsievich.render
 
 fun main(args: Array<String>){
-    val image = Renderer(2000, 2000)
+    val w = 2000
+    val h = 2000
+    render(w, h, "african_head", "african_head_out")
+    render(w, h, "diablo3_pose", "diablo3_pose_out")
+}
+
+private fun render(w: Int, h: Int, name: String, outputName: String) {
+    val image = Renderer(w, h)
+    val model = Model("model/$name/$name")
 
     val start = System.currentTimeMillis()
-    val model = Model("model/african_head/african_head")
     image.render(model)
+    println("$name render time is ${System.currentTimeMillis() - start}ms")
 
-    println("draw time ${System.currentTimeMillis() - start}ms")
-
-    image.save("output.png", false)
+    image.save("$outputName.png", false)
 }
