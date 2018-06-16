@@ -1,20 +1,28 @@
 package com.avsievich.render
 
+import java.util.*
+
 class ZBuffer(private val width: Int, private val height: Int) {
 
     private val buffer = FloatArray(width * height) { -Float.MAX_VALUE }
 
     operator fun set(x: Int, y: Int, z: Float) {
-        if (x + y * width >= buffer.size) {
+        val i = x + y * width
+        if (i < 0 || i >= buffer.size) {
             return
         }
-        buffer[x + y * width] = z
+        buffer[i] = z
     }
 
     operator fun get(x: Int, y: Int): Float {
-        if (x + y * width >= buffer.size) {
+        val i = x + y * width
+        if (i < 0 || i >= buffer.size) {
             return -Float.MAX_VALUE
         }
-        return buffer[x + y * width]
+        return buffer[i]
+    }
+
+    fun clear() {
+        Arrays.fill(buffer, -Float.MAX_VALUE)
     }
 }

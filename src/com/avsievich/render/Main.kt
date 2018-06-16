@@ -1,5 +1,7 @@
 package com.avsievich.render
 
+import java.io.File
+
 fun main(args: Array<String>){
     val w = 2000
     val h = 2000
@@ -15,5 +17,6 @@ private fun render(w: Int, h: Int, name: String, outputName: String) {
     image.render(model)
     println("$name render time is ${System.currentTimeMillis() - start}ms")
 
+    File("$outputName.png").delete()
     image.save("$outputName.png", false)
 }

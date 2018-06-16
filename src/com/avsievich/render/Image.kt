@@ -2,6 +2,7 @@ package com.avsievich.render
 
 import com.avsievich.util.toColorInt
 import com.curiouscreature.kotlin.math.Float4
+import java.util.*
 
 class Image(val width: Int,
             val height: Int,
@@ -32,4 +33,8 @@ class Image(val width: Int,
     }
 
     fun rawPixels() = pixels
+
+    fun clear() {
+        Arrays.fill(pixels, 0)
+    }
 }

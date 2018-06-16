@@ -13,6 +13,7 @@ open class Renderer(val width: Int, val height: Int) {
 
     private val image = Image(width, height, true)
     private val zBuffer = ZBuffer(width, height)
+    private val projection = Projection()
     private val lightDir = Float3(0f, 0f, -1f)
 
     fun save(name: String, withAlpha: Boolean) {
@@ -21,15 +22,22 @@ open class Renderer(val width: Int, val height: Int) {
         ImageIO.write(i, "png", File(name))
     }
 
+    fun distance(distance: Float) {
+        projection.distance(distance)
+    }
+
     fun render(model: Model) {
+        image.clear()
+        zBuffer.clear()
+
         for (i in 0 until model.size) {
             val polygon = model.polygons[i]
             val texture = model.textures[i]
 
             // Screen coordinates
-            val a = toScreenCoordinates(model.vertices[polygon[0]])
-            val b = toScreenCoordinates(model.vertices[polygon[1]])
-            val c = toScreenCoordinates(model.vertices[polygon[2]])
+            val a = toScreenCoordinates(projection.apply(model.vertices[polygon[0]]))
+            val b = toScreenCoordinates(projection.apply(model.vertices[polygon[1]]))
+            val c = toScreenCoordinates(projection.apply(model.vertices[polygon[2]]))
 
             // Illumination based on world coordinates
             val triangleA = model.vertices[polygon[2]] - model.vertices[polygon[0]]
