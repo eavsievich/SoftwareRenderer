@@ -1,6 +1,6 @@
 package com.avsievich.render
 
-import com.avsievich.util.argb
+import com.avsievich.util.*
 import com.curiouscreature.kotlin.math.*
 import java.awt.image.BufferedImage
 import java.io.File
@@ -22,7 +22,10 @@ open class Renderer(val width: Int, val height: Int) {
     }
 
     fun render(model: Model) {
-        model.polygons.forEach { polygon ->
+        for (i in 0 until model.size) {
+            val polygon = model.polygons[i]
+            val texture = model.textures[i]
+
             // Screen coordinates
             val a = toScreenCoordinates(model.vertices[polygon[0]])
             val b = toScreenCoordinates(model.vertices[polygon[1]])
@@ -34,14 +37,22 @@ open class Renderer(val width: Int, val height: Int) {
             val n = normalize(cross(triangleA, triangleB))
             val intensity = dot(n, lightDir)
 
+            // Texture coordinates
+            val ta = model.textureCoords[texture[0]]
+            val tb = model.textureCoords[texture[1]]
+            val tc = model.textureCoords[texture[2]]
+
             if (intensity > 0) {
-                triangle(a, b, c, argb(1f, intensity, intensity, intensity))
+                triangle(a, b, c, ta, tb, tc, model.diffuseTexture, intensity)
             }
         }
     }
 
 
-    private fun triangle(a: Float3, b: Float3, c: Float3, color: Int) {
+    private fun triangle(a: Float3, b: Float3, c: Float3,
+                         ta: Float2, tb: Float2, tc: Float2,
+                         texture: Image, colorIntensity: Float) {
+
         val minY = min(a.y, min(b.y, c.y)).toInt()
         val maxY = max(a.y, max(b.y, c.y)).toInt() + 1
         val minX = min(a.x, min(b.x, c.x)).toInt()
@@ -55,16 +66,28 @@ open class Renderer(val width: Int, val height: Int) {
                 p.y = y.toFloat()
 
                 val bc = barycentric(a, b, c, p) // barycentric coordinates of current point
-
                 if (bc.x < 0 || bc.y < 0 || bc.z < 0) {
                     continue
                 }
 
+                // Depth
                 p.z = (a.z * bc.x) + (b.z * bc.y) + (c.z * bc.z)
 
+                // Update pixel color only if we're closer to the camera than before
                 if (zBuffer[x, y] < p.z) {
                     zBuffer[x, y] = p.z
-                    image[x, y] = color
+
+                    // Get texture color with applied intensity
+                    val textureCoords = ta * bc.x + tb * bc.y + tc * bc.z
+                    textureCoords.x *= texture.width
+                    textureCoords.y *= texture.height
+                    val color = texture[textureCoords.x.toInt(), textureCoords.y.toInt()]
+
+                    image[x, y] = rgb(
+                            (color.red() * colorIntensity).toInt(),
+                            (color.green() * colorIntensity).toInt(),
+                            (color.blue() * colorIntensity).toInt()
+                    )
                 }
             }
         }

@@ -3,9 +3,10 @@ package com.avsievich.render
 import com.avsievich.util.toColorInt
 import com.curiouscreature.kotlin.math.Float4
 
-class Image(val width: Int, val height: Int, private val flipVertical: Boolean = false) {
-
-    private val pixels = IntArray(width * height)
+class Image(val width: Int,
+            val height: Int,
+            private val flipVertical: Boolean = false,
+            private val pixels: IntArray = IntArray(width * height)) {
 
     operator fun set(x: Int, y: Int, color: Float4) {
         this[x, y] = color.toColorInt()
