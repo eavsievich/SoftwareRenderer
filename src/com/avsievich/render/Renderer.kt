@@ -38,9 +38,9 @@ open class Renderer(val width: Int, val height: Int) {
             val intensity = dot(n, lightDir)
 
             // Texture coordinates
-            val ta = model.textureCoords[texture[0]]
-            val tb = model.textureCoords[texture[1]]
-            val tc = model.textureCoords[texture[2]]
+            val ta = model.textureCoordinates[texture[0]]
+            val tb = model.textureCoordinates[texture[1]]
+            val tc = model.textureCoordinates[texture[2]]
 
             if (intensity > 0) {
                 triangle(a, b, c, ta, tb, tc, model.diffuseTexture, intensity)

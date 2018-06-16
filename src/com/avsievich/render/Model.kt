@@ -14,23 +14,23 @@ class Model(private val filename: String) {
     private val _textures = ArrayList<IntArray>()
     private val _vertices = ArrayList<Float3>()
     private val _normals = ArrayList<Float3>()
-    private val _textureCoords = ArrayList<Float2>()
+    private val _textureCoordinates = ArrayList<Float2>()
 
     val size: Int
         get() = _polygons.size
 
-    val polygons = Collections.unmodifiableList(_polygons)
-    val textures = Collections.unmodifiableList(_textures)
+    val polygons: List<IntArray> = Collections.unmodifiableList(_polygons)!!
+    val textures: List<IntArray> = Collections.unmodifiableList(_textures)!!
 
-    val vertices = Collections.unmodifiableList(_vertices)
-    val textureCoords = Collections.unmodifiableList(_textureCoords)
-    val normals = Collections.unmodifiableList(_normals)
+    val vertices: List<Float3> = Collections.unmodifiableList(_vertices)!!
+    val textureCoordinates: List<Float2> = Collections.unmodifiableList(_textureCoordinates)!!
+    val normals: List<Float3> = Collections.unmodifiableList(_normals)!!
 
     val diffuseTexture: Image
 
     init {
         parseObj()
-        println("$filename v# ${_vertices.size}, vn# ${_normals.size}, vt# ${_textureCoords.size}, f# ${_polygons.size}")
+        println("$filename v# ${_vertices.size}, vn# ${_normals.size}, vt# ${_textureCoordinates.size}, f# ${_polygons.size}")
 
         diffuseTexture = TGAReader.getImage("${filename}_diffuse.tga")
     }
@@ -45,7 +45,7 @@ class Model(private val filename: String) {
             when (r.string()) {
                 "v" -> _vertices.add(r.float3())
                 "vn" -> _normals.add(r.float3())
-                "vt" -> _textureCoords.add(r.float2())
+                "vt" -> _textureCoordinates.add(r.float2())
                 "f" -> {
                     val f = ArrayList<IntArray>()
                     while (r.tokenizer().hasMoreTokens()) {
