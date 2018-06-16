@@ -73,14 +73,14 @@ abstract class Image(val width: Int,
         }
     }
 
-    fun triangle(x0: Int, y0: Int, x1: Int, y1: Int, x2: Int, y2: Int, color: Int) {
+    fun triangle(x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, color: Int) {
         val minY = min(y0, min(y1, y2))
         val maxY = max(y0, max(y1, y2))
         val minX = min(x0, min(x1, x2))
         val maxX = max(x0, max(x1, x2))
 
-        for (x in minX..maxX) {
-            for (y in minY..maxY) {
+        for (x in minX.toInt()..maxX.toInt()) {
+            for (y in minY.toInt()..maxY.toInt()) {
                 if (isPointInsideTriangle(x, y, x0, y0, x1, y1, x2, y2)) {
                     this[x, y] = color
                 }
@@ -92,12 +92,12 @@ abstract class Image(val width: Int,
      * Some black magic from https://stackoverflow.com/a/9755252
      */
     private fun isPointInsideTriangle(x: Int, y: Int,
-                                      x0: Int, y0: Int, x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
-        val as_x = x - x0
-        val as_y = y - y0
-        val s_ab = (x1 - x0) * as_y - (y1 - y0) * as_x > 0
-        if ((x2 - x0) * as_y - (y2 - y0) * as_x > 0 == s_ab) return false
-        return (x2 - x1) * (y - y1) - (y2 - y1) * (x - x1) > 0 == s_ab
+                                      x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float): Boolean {
+        val as_x = (x - x0)
+        val as_y = (y - y0)
+        val s_ab = (x1 - x0) * as_y - (y1 - y0) * as_x > 0f
+        if ((x2 - x0) * as_y - (y2 - y0) * as_x > 0f == s_ab) return false
+        return (x2 - x1) * (y - y1) - (y2 - y1) * (x - x1) > 0f == s_ab
     }
 
     abstract fun save(name: String)

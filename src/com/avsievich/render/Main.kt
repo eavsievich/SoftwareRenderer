@@ -7,7 +7,7 @@ fun main(args: Array<String>){
 
     val start = System.currentTimeMillis()
     val model = Model("model/african_head/african_head.obj")
-    model.renderFilled(image)
+    Renderer.renderFilled(image, model)
 
     println("draw time ${System.currentTimeMillis() - start}ms")
 

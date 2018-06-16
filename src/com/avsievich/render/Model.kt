@@ -1,9 +1,6 @@
 package com.avsievich.render
 
-import com.avsievich.image.Image
-import com.avsievich.util.CYAN
 import com.avsievich.util.FastReader
-import com.avsievich.util.randomColor
 import com.curiouscreature.kotlin.math.Float2
 import com.curiouscreature.kotlin.math.Float3
 import java.io.FileInputStream
@@ -12,32 +9,38 @@ import kotlin.collections.ArrayList
 
 class Model(private val filename: String) {
 
-    private val verts =  ArrayList<Float3>()
-    private val faces = ArrayList<ArrayList<IntArray>>() // this IntArray means vertex/uv/normal
-    private val facesVert = ArrayList<IntArray>()
-    private val norms = ArrayList<Float3>()
-    private val uv = ArrayList<Float2>()
+    private val modelVerts = ArrayList<Float3>()
+    private val modelFaces = ArrayList<ArrayList<IntArray>>() // this IntArray means vertex/uv/normal
+    private val modelFacesVert = ArrayList<IntArray>()
+    private val modelNorms = ArrayList<Float3>()
+    private val modelUv = ArrayList<Float2>()
+
+    val verts = Collections.unmodifiableList(modelVerts)
+    val faces = Collections.unmodifiableList(modelFaces)
+    val facesVert = Collections.unmodifiableList(modelFacesVert)
+    val norms = Collections.unmodifiableList(modelNorms)
+    val uv = Collections.unmodifiableList(modelUv)
 
     init {
         parse()
         warmUpFacesVert()
-        println("$filename v# ${verts.size}, vn# ${norms.size}, vt# ${uv.size}, f# ${faces.size}, fv# ${facesVert.size}")
+        println("$filename v# ${modelVerts.size}, vn# ${modelNorms.size}, vt# ${modelUv.size}, f# ${modelFaces.size}, fv# ${modelFacesVert.size}")
     }
 
     private fun parse() {
         val r = FastReader(FileInputStream(filename))
         while (r.hasNext()) {
             when (r.string()) {
-                "v" -> verts.add(r.float3())
-                "vn" -> norms.add(r.float3())
-                "vt" -> uv.add(r.float2())
+                "v" -> modelVerts.add(r.float3())
+                "vn" -> modelNorms.add(r.float3())
+                "vt" -> modelUv.add(r.float2())
                 "f" -> {
                     val f = ArrayList<IntArray>()
                     while (r.tokenizer().hasMoreTokens()) {
                         val facesTokenizer = StringTokenizer(r.string(), "/")
                         f.add(IntArray(3, { facesTokenizer.nextToken().toInt() - 1 }))
                     }
-                    faces.add(f)
+                    modelFaces.add(f)
                 }
             }
         }
@@ -45,34 +48,8 @@ class Model(private val filename: String) {
     }
 
     private fun warmUpFacesVert() {
-        faces.forEach { f ->
-            facesVert.add(IntArray(f.size, { i -> f[i][0] }))
-        }
-    }
-
-    fun renderWireframe(image: Image) {
-        facesVert.forEach { face ->
-            for (j in 0 until 3) {
-                val v0 = verts[face[j]]
-                val v1 = verts[face[(j + 1) % 3]]
-                val x0 = ((v0.x + 1.0) * image.width / 2.0).toInt()
-                val y0 = ((v0.y + 1.0) * image.height / 2.0).toInt()
-                val x1 = ((v1.x + 1.0) * image.width / 2.0).toInt()
-                val y1 = ((v1.y + 1.0) * image.height / 2.0).toInt()
-                image.line(x0, y0, x1, y1, CYAN)
-            }
-        }
-    }
-
-    fun renderFilled(image: Image) {
-        facesVert.forEach { face ->
-            val x0 = ((verts[face[0]].x + 1.0) * image.width / 2.0).toInt()
-            val y0 = ((verts[face[0]].y + 1.0) * image.height / 2.0).toInt()
-            val x1 = ((verts[face[1]].x + 1.0) * image.width / 2.0).toInt()
-            val y1 = ((verts[face[1]].y + 1.0) * image.height / 2.0).toInt()
-            val x2 = ((verts[face[2]].x + 1.0) * image.width / 2.0).toInt()
-            val y2 = ((verts[face[2]].y + 1.0) * image.height / 2.0).toInt()
-            image.triangle(x0, y0, x1, y1, x2, y2, randomColor())
+        modelFaces.forEach { f ->
+            modelFacesVert.add(IntArray(f.size, { i -> f[i][0] }))
         }
     }
 }
